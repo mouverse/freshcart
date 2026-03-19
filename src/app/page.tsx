@@ -1,7 +1,11 @@
-import React from 'react'
+import HeroSlider from '@/components/home/HeroSlider';
+import Features from '@/components/home/Features';
 
-export default function page() {
+export default function HomePage() {
   return (
-    <div>page</div>
-  )
+    <main>
+      <HeroSlider />
+      <Features />
+    </main>
+  );
 }

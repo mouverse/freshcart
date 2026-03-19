@@ -12,3 +12,22 @@
   --color-primary-800: #166534;
   --color-primary-900: #14532d;
 }
+
+/* Swiper Pagination Styles */
+.hero-swiper .swiper-pagination {
+  bottom: 20px !important;
+}
+
+.hero-swiper .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.hero-swiper .swiper-pagination-bullet-active {
+  background: white;
+  width: 32px;
+  border-radius: 6px;
+}

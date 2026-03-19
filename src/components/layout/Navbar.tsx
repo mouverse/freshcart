@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useSession, signOut } from 'next-auth/react';
 import { 
   FaMagnifyingGlass, 
   FaChevronDown, 
@@ -11,15 +12,29 @@ import {
   FaBars,
   FaXmark
 } from 'react-icons/fa6';
-import { FaHeart, FaUser } from 'react-icons/fa';
+import { 
+  FaHeart, 
+  FaUser, 
+  FaBoxOpen, 
+  FaAddressBook, 
+  FaGear, 
+  FaRightFromBracket 
+} from 'react-icons/fa6';
+import { FaCircleUser } from 'react-icons/fa6';
 
 export default function Navbar() {
+  const { data: session } = useSession();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Search query:', searchQuery);
+  };
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/' });
   };
 
   return (
@@ -138,6 +153,11 @@ export default function Navbar() {
               title="Wishlist"
             >
               <FaHeart className="text-xl text-gray-500 group-hover:text-primary-600 transition-colors" />
+              {session && (
+                <span className="absolute top-0.5 right-0.5 size-[18px] rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">
+                  1
+                </span>
+              )}
             </Link>
 
             <Link
@@ -148,13 +168,93 @@ export default function Navbar() {
               <FaCartShopping className="text-xl text-gray-500 group-hover:text-primary-600 transition-colors" />
             </Link>
 
-            <Link
-              href="/login"
-              className="hidden lg:flex items-center gap-2 ml-2 px-5 py-2.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors shadow-sm shadow-primary-600/20"
-            >
-              <FaUser className="text-xs" />
-              Sign In
-            </Link>
+            {session ? (
+              <div className="hidden lg:block relative">
+                <button
+                  onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
+                  onBlur={() => setTimeout(() => setIsAccountDropdownOpen(false), 200)}
+                  className="relative p-2.5 rounded-full hover:bg-gray-100 transition-colors group"
+                  title="Account"
+                >
+                  <FaCircleUser className="text-xl text-gray-500 group-hover:text-primary-600 transition-colors" />
+                </button>
+                <div
+                  className={`absolute right-0 top-full mt-2 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl transition-all duration-200 origin-top-right ${
+                    isAccountDropdownOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'
+                  }`}
+                >
+                  <div className="p-4 border-b border-gray-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+                        <FaCircleUser className="text-xl text-primary-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-800 truncate">
+                          {session.user?.name || 'User'}
+                        </p>
+                        <p className="text-xs text-gray-400 truncate">
+                          {session.user?.email}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="py-2">
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                    >
+                      <FaUser className="w-4 text-gray-400" />
+                      My Profile
+                    </Link>
+                    <Link
+                      href="/orders"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                    >
+                      <FaBoxOpen className="w-4 text-gray-400" />
+                      My Orders
+                    </Link>
+                    <Link
+                      href="/wishlist"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                    >
+                      <FaHeart className="w-4 text-gray-400" />
+                      My Wishlist
+                    </Link>
+                    <Link
+                      href="/profile/addresses"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                    >
+                      <FaAddressBook className="w-4 text-gray-400" />
+                      Addresses
+                    </Link>
+                    <Link
+                      href="/profile/settings"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                    >
+                      <FaGear className="w-4 text-gray-400" />
+                      Settings
+                    </Link>
+                  </div>
+                  <div className="border-t border-gray-100 py-2">
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors w-full text-left"
+                    >
+                      <FaRightFromBracket className="w-4" />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden lg:flex items-center gap-2 ml-2 px-5 py-2.5 rounded-full bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors shadow-sm shadow-primary-600/20"
+              >
+                <FaUser className="text-xs" />
+                Sign In
+              </Link>
+            )}
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -199,13 +299,13 @@ export default function Navbar() {
                   <input
                     type="text"
                     placeholder="Search products..."
-                    className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 text-sm"
+                    className="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-sm"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                   <button
                     type="submit"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-green-600 text-white flex items-center justify-center"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg bg-primary-600 text-white flex items-center justify-center"
                   >
                     <FaMagnifyingGlass className="text-sm" />
                   </button>
@@ -216,28 +316,28 @@ export default function Navbar() {
                 <div className="space-y-1">
                   <Link
                     href="/"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Home
                   </Link>
                   <Link
                     href="/products"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Shop
                   </Link>
                   <Link
                     href="/categories"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Categories
                   </Link>
                   <Link
                     href="/brands"
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-green-600 hover:bg-green-50 transition-colors"
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Brands
@@ -250,7 +350,7 @@ export default function Navbar() {
               <div className="p-4 space-y-1">
                 <Link
                   href="/wishlist"
-                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-green-50 transition-colors"
+                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <div className="flex items-center gap-3">
@@ -262,12 +362,12 @@ export default function Navbar() {
                 </Link>
                 <Link
                   href="/cart"
-                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-green-50 transition-colors"
+                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-primary-50 transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-green-50 flex items-center justify-center">
-                      <FaCartShopping className="text-green-600" />
+                    <div className="w-9 h-9 rounded-full bg-primary-50 flex items-center justify-center">
+                      <FaCartShopping className="text-primary-600" />
                     </div>
                     <span className="font-medium text-gray-700">Cart</span>
                   </div>
@@ -277,35 +377,74 @@ export default function Navbar() {
               <div className="mx-4 border-t border-gray-100"></div>
 
               <div className="p-4 space-y-1">
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <Link
-                    href="/login"
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-green-600 text-green-600 font-semibold hover:bg-green-50 transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </div>
+                {session ? (
+                  <>
+                    <div className="px-4 py-3 mb-2">
+                      <p className="text-sm font-semibold text-gray-800">
+                        {session.user?.name || 'User'}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {session.user?.email}
+                      </p>
+                    </div>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <FaUser className="w-4" />
+                      My Profile
+                    </Link>
+                    <Link
+                      href="/orders"
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <FaBoxOpen className="w-4" />
+                      My Orders
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        handleSignOut();
+                      }}
+                      className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-colors w-full text-left"
+                    >
+                      <FaRightFromBracket className="w-4" />
+                      Sign Out
+                    </button>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    <Link
+                      href="/login"
+                      className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-primary-600 text-primary-600 font-semibold hover:bg-primary-50 transition-colors"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
               </div>
 
               <Link
                 href="/contact"
-                className="mx-4 mt-2 p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center gap-3 hover:bg-green-50 transition-colors"
+                className="mx-4 mt-2 p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center gap-3 hover:bg-primary-50 transition-colors"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-                  <FaHeadset className="text-green-600" />
+                <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+                  <FaHeadset className="text-primary-600" />
                 </div>
                 <div>
                   <div className="text-sm font-semibold text-gray-700">Need Help?</div>
-                  <div className="text-sm text-green-600">Contact Support</div>
+                  <div className="text-sm text-primary-600">Contact Support</div>
                 </div>
               </Link>
             </div>
