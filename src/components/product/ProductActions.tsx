@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useCart } from '@/context/CartContext';
 import {
   FaCartShopping,
   FaBolt,
@@ -16,6 +17,7 @@ import {
 import { FaRegHeart, FaRegStar } from 'react-icons/fa';
 
 interface Props {
+  productId: string;
   price: number;
   priceAfterDiscount?: number;
   quantity: number;
@@ -52,12 +54,14 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
 }
 
 export default function ProductActions({
+  productId,
   price,
   priceAfterDiscount,
   quantity,
   ratingsAverage,
   ratingsQuantity,
 }: Props) {
+  const { addToCart, loading: cartLoading } = useCart();
   const [qty, setQty] = useState(1);
 
   const displayPrice = priceAfterDiscount ?? price;
@@ -141,11 +145,12 @@ export default function ProductActions({
       {/* CTA buttons */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <button
-          disabled={quantity === 0}
+          disabled={quantity === 0 || cartLoading}
+          onClick={() => addToCart(productId)}
           className="flex-1 text-white py-3.5 px-6 rounded-xl font-medium hover:bg-primary-700 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary-600/25 bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <FaCartShopping />
-          Add to Cart
+          {cartLoading ? 'Adding...' : 'Add to Cart'}
         </button>
         <button
           disabled={quantity === 0}

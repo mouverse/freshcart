@@ -1,9 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaPlus, FaStar, FaStarHalfStroke } from 'react-icons/fa6';
 import { FaRegHeart, FaRegStar, FaRegEye } from 'react-icons/fa';
 import { FaArrowsRotate } from 'react-icons/fa6';
 import type { Product } from '@/types/product';
+import { useCart } from '@/context/CartContext';
 
 function StarRating({ rating, count }: { rating: number; count: number }) {
   const stars = [];
@@ -31,6 +34,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
 }
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { addToCart, loading } = useCart();
   const discountPercent =
     product.priceAfterDiscount
       ? Math.round(((product.price - product.priceAfterDiscount) / product.price) * 100)
@@ -102,7 +106,11 @@ export default function ProductCard({ product }: { product: Product }) {
               <span className="text-lg font-bold text-gray-800">{product.price} EGP</span>
             )}
           </div>
-          <button className="h-10 w-10 rounded-full flex items-center justify-center transition bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-70">
+          <button
+            disabled={loading}
+            onClick={() => addToCart(product._id)}
+            className="h-10 w-10 rounded-full flex items-center justify-center transition bg-primary-600 text-white hover:bg-primary-700 disabled:opacity-70"
+          >
             <FaPlus />
           </button>
         </div>

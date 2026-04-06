@@ -130,6 +130,7 @@ export default async function ProductPage({ params }: Props) {
 
                 {/* Interactive actions (client) */}
                 <ProductActions
+                  productId={product._id}
                   price={product.price}
                   priceAfterDiscount={product.priceAfterDiscount}
                   quantity={product.quantity}

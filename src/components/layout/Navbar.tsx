@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
+import { useCart } from '@/context/CartContext';
 import { 
   FaMagnifyingGlass, 
   FaChevronDown, 
@@ -24,6 +25,7 @@ import { FaCircleUser } from 'react-icons/fa6';
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const { cartCount } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
@@ -166,6 +168,11 @@ export default function Navbar() {
               title="Cart"
             >
               <FaCartShopping className="text-xl text-gray-500 group-hover:text-primary-600 transition-colors" />
+              {cartCount > 0 && (
+                <span className="absolute top-0.5 right-0.5 size-[18px] rounded-full bg-primary-600 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">
+                  {cartCount > 99 ? '99+' : cartCount}
+                </span>
+              )}
             </Link>
 
             {session ? (
@@ -371,6 +378,11 @@ export default function Navbar() {
                     </div>
                     <span className="font-medium text-gray-700">Cart</span>
                   </div>
+                  {cartCount > 0 && (
+                    <span className="bg-primary-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      {cartCount}
+                    </span>
+                  )}
                 </Link>
               </div>
 
