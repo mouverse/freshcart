@@ -18,8 +18,6 @@ import {
   FaHeart, 
   FaUser, 
   FaBoxOpen, 
-  FaAddressBook, 
-  FaGear, 
   FaRightFromBracket 
 } from 'react-icons/fa6';
 import { FaCircleUser } from 'react-icons/fa6';
@@ -209,13 +207,6 @@ export default function Navbar() {
                   </div>
                   <div className="py-2">
                     <Link
-                      href="/profile"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
-                    >
-                      <FaUser className="w-4 text-gray-400" />
-                      My Profile
-                    </Link>
-                    <Link
                       href="/orders"
                       className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                     >
@@ -228,20 +219,6 @@ export default function Navbar() {
                     >
                       <FaHeart className="w-4 text-gray-400" />
                       My Wishlist
-                    </Link>
-                    <Link
-                      href="/profile/addresses"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
-                    >
-                      <FaAddressBook className="w-4 text-gray-400" />
-                      Addresses
-                    </Link>
-                    <Link
-                      href="/profile/settings"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 transition-colors"
-                    >
-                      <FaGear className="w-4 text-gray-400" />
-                      Settings
                     </Link>
                   </div>
                   <div className="border-t border-gray-100 py-2">
