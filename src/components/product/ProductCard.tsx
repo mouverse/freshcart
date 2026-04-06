@@ -2,11 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaPlus, FaStar, FaStarHalfStroke } from 'react-icons/fa6';
+import { FaPlus, FaStar, FaStarHalfStroke, FaHeart } from 'react-icons/fa6';
 import { FaRegHeart, FaRegStar, FaRegEye } from 'react-icons/fa';
 import { FaArrowsRotate } from 'react-icons/fa6';
 import type { Product } from '@/types/product';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
 
 function StarRating({ rating, count }: { rating: number; count: number }) {
   const stars = [];
@@ -35,6 +36,8 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addToCart, loading } = useCart();
+  const { toggleWishlist, isWishlisted } = useWishlist();
+  const wishlisted = isWishlisted(product._id);
   const discountPercent =
     product.priceAfterDiscount
       ? Math.round(((product.price - product.priceAfterDiscount) / product.price) * 100)
@@ -61,10 +64,11 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="absolute top-3 right-3 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
-            className="bg-white h-8 w-8 rounded-full flex items-center justify-center transition shadow-sm text-gray-600 hover:text-red-500"
-            title="Add to wishlist"
+            onClick={() => toggleWishlist(product)}
+            className={`bg-white h-8 w-8 rounded-full flex items-center justify-center transition shadow-sm ${wishlisted ? 'text-red-500' : 'text-gray-600 hover:text-red-500'}`}
+            title={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
           >
-            <FaRegHeart />
+            {wishlisted ? <FaHeart /> : <FaRegHeart />}
           </button>
           <button className="bg-white h-8 w-8 rounded-full flex items-center justify-center text-gray-600 hover:text-primary-600 shadow-sm">
             <FaArrowsRotate />

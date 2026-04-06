@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
 import {
   FaCartShopping,
   FaBolt,
@@ -15,8 +16,11 @@ import {
   FaStarHalfStroke,
 } from 'react-icons/fa6';
 import { FaRegHeart, FaRegStar } from 'react-icons/fa';
+import { FaHeart } from 'react-icons/fa6';
+import type { Product } from '@/types/product';
 
 interface Props {
+  product: Product;
   productId: string;
   price: number;
   priceAfterDiscount?: number;
@@ -54,6 +58,7 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
 }
 
 export default function ProductActions({
+  product,
   productId,
   price,
   priceAfterDiscount,
@@ -62,6 +67,8 @@ export default function ProductActions({
   ratingsQuantity,
 }: Props) {
   const { addToCart, loading: cartLoading } = useCart();
+  const { toggleWishlist, isWishlisted } = useWishlist();
+  const wishlisted = isWishlisted(productId);
   const [qty, setQty] = useState(1);
 
   const displayPrice = priceAfterDiscount ?? price;
@@ -163,9 +170,16 @@ export default function ProductActions({
 
       {/* Wishlist + Share */}
       <div className="flex gap-3 mb-6">
-        <button className="flex-1 border-2 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 border-gray-200 text-gray-700 hover:border-primary-300 hover:text-primary-600">
-          <FaRegHeart />
-          Add to Wishlist
+        <button
+          onClick={() => toggleWishlist(product)}
+          className={`flex-1 border-2 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 ${
+            wishlisted
+              ? 'border-red-300 text-red-500 bg-red-50 hover:bg-red-100'
+              : 'border-gray-200 text-gray-700 hover:border-red-300 hover:text-red-500'
+          }`}
+        >
+          {wishlisted ? <FaHeart /> : <FaRegHeart />}
+          {wishlisted ? 'Wishlisted' : 'Add to Wishlist'}
         </button>
         <button className="border-2 border-gray-200 text-gray-700 py-3 px-4 rounded-xl hover:border-primary-300 hover:text-primary-600 transition">
           <FaShareNodes />

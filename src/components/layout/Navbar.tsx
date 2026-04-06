@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
 import { 
   FaMagnifyingGlass, 
   FaChevronDown, 
@@ -26,6 +27,7 @@ import { FaCircleUser } from 'react-icons/fa6';
 export default function Navbar() {
   const { data: session } = useSession();
   const { cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
@@ -155,9 +157,9 @@ export default function Navbar() {
               title="Wishlist"
             >
               <FaHeart className="text-xl text-gray-500 group-hover:text-primary-600 transition-colors" />
-              {session && (
+              {wishlistCount > 0 && (
                 <span className="absolute top-0.5 right-0.5 size-[18px] rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white">
-                  1
+                  {wishlistCount > 99 ? '99+' : wishlistCount}
                 </span>
               )}
             </Link>
@@ -366,6 +368,11 @@ export default function Navbar() {
                     </div>
                     <span className="font-medium text-gray-700">Wishlist</span>
                   </div>
+                  {wishlistCount > 0 && (
+                    <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      {wishlistCount}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   href="/cart"
