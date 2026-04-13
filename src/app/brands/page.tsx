@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 import Features from '@/components/home/Features';
 
 export const metadata: Metadata = {
-  title: 'Top Brands | FreshCart',
+  title: 'Top Brands',
   description: 'Shop from your favorite brands',
 };
 

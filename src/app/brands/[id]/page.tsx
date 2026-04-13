@@ -42,11 +42,11 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   try {
     const brand = await getBrand(id);
     return {
-      title: `${brand.name} Products | FreshCart`,
+      title: `${brand.name} Products`,
       description: `Shop ${brand.name} products on FreshCart`,
     };
   } catch {
-    return { title: 'Brand | FreshCart' };
+    return { title: 'Brand' };
   }
 }
 

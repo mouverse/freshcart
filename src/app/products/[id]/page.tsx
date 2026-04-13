@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: 'Product Not Found' };
 
   return {
-    title: `${product.title} | FreshCart`,
+    title: product.title,
     description: product.description.slice(0, 160),
   };
 }

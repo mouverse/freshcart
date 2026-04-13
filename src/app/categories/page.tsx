@@ -29,7 +29,7 @@ async function getCategories(): Promise<Category[]> {
 }
 
 export const metadata = {
-  title: 'All Categories | FreshCart',
+  title: 'All Categories',
   description: 'Browse our wide range of product categories',
 };
 

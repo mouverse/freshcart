@@ -6,7 +6,7 @@ import ProductCard from '@/components/product/ProductCard';
 import Features from '@/components/home/Features';
 
 export const metadata: Metadata = {
-  title: 'All Products | FreshCart',
+  title: 'All Products',
   description: 'Explore our complete product collection',
 };
 
