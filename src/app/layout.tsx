@@ -24,11 +24,6 @@ export const metadata: Metadata = {
     template: '%s | FreshCart',
   },
   description: 'Shop groceries, electronics, fashion and more at FreshCart. Fast delivery, great prices.',
-  icons: {
-    icon: '/images/favicon.png',
-    shortcut: '/images/favicon.png',
-    apple: '/images/favicon.png',
-  },
 };
 
 export default function RootLayout({
